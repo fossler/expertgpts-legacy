@@ -401,6 +401,7 @@ expert_id, page_path = create_new_expert(
 
 ## Git Workflow Notes
 
+- **Branch protection**: `main` is protected; never commit or push to it directly. Work on a feature branch, push it and merge via a pull request
 - **Permanent pages**: `pages/1000_Home.py`, `pages/9998_Settings.py`, `pages/9999_Help.py` and `pages/_debug.py` are committed to git
 - **Generated pages**: `pages/1001_*.py` and higher are auto-generated and gitignored (created by `setup.py` / the UI, refreshed via `regenerate_pages.py`)
 - **Template changes**: Commit `templates/template.py` only; generated pages are gitignored and local. Run `uv run python scripts/regenerate_pages.py` after changing the template, and again on every other machine after pulling a template change

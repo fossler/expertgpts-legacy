@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/expertgpts-logo-dark.jpg" alt="ExpertGPTs legacy logo" width="320">
+</p>
+
 # ExpertGPTs
 
 A multi-expert AI chat application built with Streamlit, providing access to domain-specific AI experts with support for multiple LLM providers, full internationalization, and persistent chat history.

@@ -12,8 +12,9 @@ from typing import List, Dict
 from lib.storage.attachment_store import delete_expert_attachments
 
 # Optional per-message fields kept alongside role/content: which provider and
-# model produced an assistant answer (used for its avatar)
-OPTIONAL_MESSAGE_FIELDS = ("provider", "model")
+# model produced an assistant answer (used for its avatar) and when the
+# message was first saved
+OPTIONAL_MESSAGE_FIELDS = ("provider", "model", "timestamp")
 
 
 def assistant_message(content: str, provider: str, model: str) -> Dict:
@@ -141,7 +142,8 @@ def save_chat_history(expert_id: str, messages: List[Dict]) -> bool:
     """Save chat history for a specific expert to file.
 
     Automatically truncates history if file size exceeds limit.
-    Adds timestamp to each message if not present.
+    Adds a timestamp to each message that has none. The timestamp is also
+    set on the passed message itself, so later saves keep it.
 
     Args:
         expert_id: Unique expert identifier
@@ -160,11 +162,8 @@ def save_chat_history(expert_id: str, messages: List[Dict]) -> bool:
         timestamped_messages = []
         for msg in messages:
             if isinstance(msg, dict) and "role" in msg and "content" in msg:
-                timestamped_msg = _copy_message(msg)
-                timestamped_msg["timestamp"] = msg.get(
-                    "timestamp", datetime.now().isoformat()
-                )
-                timestamped_messages.append(timestamped_msg)
+                msg.setdefault("timestamp", datetime.now().isoformat())
+                timestamped_messages.append(_copy_message(msg))
 
         # Create file structure
         file_data = {

@@ -38,6 +38,7 @@ from lib.shared.session_state import (
     invalidate_expert_cache,
 )
 from lib.shared.file_ops import safe_path_join, validate_cwd
+from lib.ui.logo import theme_logo
 from lib.storage import StreamingCache, delete_chat_history
 
 
@@ -1134,9 +1135,11 @@ def render_about_section():
 
     st.subheader(i18n.t("about.title"), icon=":material/info:")
 
-    st.markdown(f"""
-    ### ExpertGPTs
+    # The logo replaces the "ExpertGPTs" heading
+    logo, _ = theme_logo()
+    st.image(logo, width=260)
 
+    st.markdown(f"""
     {i18n.t("about.description")}
 
     **{i18n.t("about.version")}**

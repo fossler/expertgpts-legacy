@@ -38,4 +38,23 @@ def test_provider_and_model_survive_save_and_load(history_dir):
 @pytest.mark.unit
 def test_missing_origin_is_not_stored_as_empty(history_dir):
     chm.save_chat_history("1001_x", [chm.assistant_message("A", None, None)])
-    assert chm.load_chat_history("1001_x") == [{"role": "assistant", "content": "A"}]
+    loaded = chm.load_chat_history("1001_x")
+    assert [{k: v for k, v in m.items() if k != "timestamp"} for m in loaded] == [
+        {"role": "assistant", "content": "A"}
+    ]
+
+
+@pytest.mark.unit
+def test_timestamp_is_kept_across_saves(history_dir):
+    first = {"role": "user", "content": "Q"}
+    chm.save_chat_history("1001_x", [first])
+    stamp = first["timestamp"]
+
+    # Reload like an app restart, then save again with a new message
+    messages = chm.load_chat_history("1001_x")
+    messages.append(chm.assistant_message("A", "openai", "gpt-6.1-sol"))
+    chm.save_chat_history("1001_x", messages)
+
+    loaded = chm.load_chat_history("1001_x")
+    assert loaded[0]["timestamp"] == stamp
+    assert loaded[1]["timestamp"] >= stamp

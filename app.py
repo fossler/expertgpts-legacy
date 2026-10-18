@@ -20,6 +20,7 @@ from lib.shared.constants import EXAMPLE_EXPERTS_COUNT
 from lib.i18n import i18n
 from lib.shared.helpers import translate_expert_name
 from lib.shared.file_ops import validate_cwd
+from lib.ui.logo import theme_logo
 
 
 def check_first_run():
@@ -87,10 +88,12 @@ def initialize_session_state():
 def main():
     """Main application entry point using st.navigation()."""
 
+    logo, icon = theme_logo()
+
     # Set page configuration (must be first st command)
     st.set_page_config(
         page_title="ExpertGPTs",
-        page_icon="🤖",
+        page_icon=icon,
         layout="wide",
         initial_sidebar_state=320,
     )
@@ -102,6 +105,9 @@ def main():
 
     # Initialize session state before navigation
     initialize_session_state()
+
+    # Logo above the navigation; only the icon when the sidebar is collapsed
+    st.logo(logo, size="large", icon_image=icon)
 
     # Define the home page with icon
     home = st.Page(
